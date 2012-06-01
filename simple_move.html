@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>My HTML5 Experiment</title>
+    <script src='jquery.js'></script>
+    <script>
+      var me = null;
+      var $context = null;
+      var player = function(){
+                      var _canvas = document.getElementById("my_canvas");
+                      return {
+                        position : { x : _canvas.width/2 , y : _canvas.height/2 }
+                      }
+                    }
+
+      function move(){
+        var speed = 5;
+
+        switch(event.keyCode){
+          case 37: //left
+            me.position.x -= speed;
+            break;
+          case 38: //up
+            me.position.y -= speed;
+            break;
+          case 39: //right
+            me.position.x += speed;
+            break;
+          case 40: //down
+            me.position.y += speed;
+            break;
+
+          }
+
+        $canvas.width = $canvas.width;
+        $context.fillRect(me.position.x,me.position.y,100,100);
+      }
+      
+      $(document).ready(function(){
+        $canvas = document.getElementById("my_canvas");
+        $context = $canvas.getContext('2d');
+        me = player();
+        $context.fillRect(me.position.x,me.position.y,100,100);
+      });
+    </script>
+  </head>
+  <body onkeydown="move();">
+    <div >
+      <canvas id="my_canvas" width='600' height='600'></canvas>
+    </div>
+  </body>
+</html>
