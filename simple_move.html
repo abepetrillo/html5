@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>My HTML5 Experiment</title>
-    <script src='jquery.js'></script>
+    <script src='js/jquery.js'></script>
     <script>
       var me = null;
       var $context = null;
@@ -34,7 +34,7 @@
         $canvas.width = $canvas.width;
         $context.fillRect(me.position.x,me.position.y,100,100);
       }
-      
+
       $(document).ready(function(){
         $canvas = document.getElementById("my_canvas");
         $context = $canvas.getContext('2d');
