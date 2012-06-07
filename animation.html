@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
  <head>
-  <title>three.js webgl - morph targets - horse</title>
+  <title>Horse experiment (Taken from threejs examples)</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
   <style>
@@ -15,6 +15,7 @@
  </head>
  <body>
 
+  <script src=js/jquery.js></script>
   <script src="js/three.js"></script>
 
   <script src="js/Stats.js"></script>
@@ -23,7 +24,7 @@
     Game = { 
               controls: {
                 isKeyDown : false,
-                whichKeyDown : null //key which is being held down (set on keydown event listener)
+                whichKey : null //key which is being held down (set on keydown event listener)
               } 
     
             }
@@ -31,11 +32,11 @@
     //set up listeners
     window.addEventListener('keydown', function(event){
       Game.controls.isKeyDown = true;
-      Game.controls.whichKeyDown = event.which ? event.which : event.keyCode;
+      Game.controls.whichKey = event.which ? event.which : event.keyCode;
     });
     window.addEventListener('keyup', function(event){
       Game.controls.isKeyDown = false;
-      Game.controls.whichKeyDown = null;
+      Game.controls.whichKey = null;
     });
   </script>
 
@@ -43,7 +44,7 @@
 
    var container, stats;
    var camera, scene, projector, renderer;
-   var mesh;
+   var horse;
 
    init();
    animate();
@@ -62,8 +63,6 @@
     camera.target = new THREE.Vector3( 0, 150, 0 );
 
 
-    //
-
     var light = new THREE.DirectionalLight( 0xefefff, 2 );
     light.position.set( 1, 1, 1 ).normalize();
     scene.add( light );
@@ -75,9 +74,21 @@
     var loader = new THREE.JSONLoader( true );
     loader.load( "js/models/horse.js", function( geometry ) {
 
-     mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x606060, morphTargets: true } ) );
-     mesh.scale.set( 1.5, 1.5, 1.5 );
-     scene.add( mesh );
+     horse = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x606060, morphTargets: true } ) );
+     horse.scale.set( 1.5, 1.5, 1.5 );
+     scene.add( horse );
+
+     $.extend(horse, {
+       action: function(key){
+         var actions = [];
+         var _this = this;
+         actions[37] = function(){
+          _this.rotation.y += 1;
+         }
+         console.log(key, this);
+         actions[key]();
+       }
+     });
 
     } );
 
@@ -130,12 +141,12 @@
 
     if (Game.controls.isKeyDown){
       
-      var y = mesh.rotation.y;
-      mesh.rotation.y += (y * Math.PI / 180)
-      if(mesh.rotation.y < 0.1){mesh.rotation.y = 0.1 }
-      console.log(mesh.rotation.y);
+      //var y = horse.rotation.y;
+      //horse.rotation.y += (y * Math.PI / 180);
+      horse.action(Game.controls.whichKey);
+    
     }
-    if ( mesh ) {
+    if ( horse ) {
 
      // Alternate morph targets
 
@@ -146,20 +157,20 @@
 
      if ( keyframe != currentKeyframe ) {
 
-      mesh.morphTargetInfluences[ lastKeyframe ] = 0;
-      mesh.morphTargetInfluences[ currentKeyframe ] = 1;
-      mesh.morphTargetInfluences[ keyframe ] = 0;
+      horse.morphTargetInfluences[ lastKeyframe ] = 0;
+      horse.morphTargetInfluences[ currentKeyframe ] = 1;
+      horse.morphTargetInfluences[ keyframe ] = 0;
 
       lastKeyframe = currentKeyframe;
       currentKeyframe = keyframe;
 
-       //console.log( mesh.morphTargetInfluences );
+       //console.log( horse.morphTargetInfluences );
 
      }
 
 
-     mesh.morphTargetInfluences[ keyframe ] = ( time % interpolation ) / interpolation;
-     mesh.morphTargetInfluences[ lastKeyframe ] = 1 - mesh.morphTargetInfluences[ keyframe ];
+     horse.morphTargetInfluences[ keyframe ] = ( time % interpolation ) / interpolation;
+     horse.morphTargetInfluences[ lastKeyframe ] = 1 - horse.morphTargetInfluences[ keyframe ];
 
     }
 
