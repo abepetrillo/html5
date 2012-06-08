@@ -70,7 +70,7 @@
     var light = new THREE.DirectionalLight( 0xffefef, 2 );
     light.position.set( -1, -1, -1 ).normalize();
     scene.add( light );
-
+    //Add a horse
     var loader = new THREE.JSONLoader( true );
     loader.load( "js/models/horse.js", function( geometry ) {
 
@@ -78,15 +78,29 @@
      horse.scale.set( 1.5, 1.5, 1.5 );
      scene.add( horse );
 
+      
+     //add grass
+      var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xcc000000})
+      grass = new THREE.Mesh( new THREE.PlaneGeometry( 10000, 10000 ), new THREE.MeshBasicMaterial( { color: 0x11ee11 } ) );
+      scene.add(grass);
+     //add keyboard actions to the horse
      $.extend(horse, {
        action: function(key){
          var actions = [];
          var _this = this;
+         if(_this.rotation.y == 0){_this.rotation.y = 0.01}
+         //left
          actions[37] = function(){
-          _this.rotation.y += 1;
+           _this.rotation.y += Math.PI / 180;
+        }
+        //right
+        actions[39] = function(){
+          _this.rotation.y -= (Math.PI) / 180
+        }
+        if(typeof actions[key] != 'undefined'){
+          actions[key]();
+          console.log(_this.rotation.y)
          }
-         console.log(key, this);
-         actions[key]();
        }
      });
 
@@ -133,7 +147,7 @@
 
     //camera.position.x = radius * Math.sin( theta * Math.PI / 360 );
     //camera.position.z = radius * Math.cos( theta * Math.PI / 360 );
-    camera.position.x = -200;
+    camera.position.x = 0;
     camera.position.z = -600;
     camera.position.y= 600
     camera.lookAt( camera.target );
