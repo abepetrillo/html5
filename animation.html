@@ -104,6 +104,12 @@
         actions[40] = function(){
           _this.translateZ(-10);
         }
+        //R: reset the position of the horse
+        actions[82] = function(){
+          _this.position.x = 0;
+          _this.position.y = 0;
+          _this.position.z = 0;
+        }
         if(typeof actions[key] != 'undefined'){
           actions[key]();
           console.log(_this.rotation.y)
