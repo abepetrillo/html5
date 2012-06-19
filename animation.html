@@ -97,6 +97,13 @@
         actions[39] = function(){
           _this.rotation.y -= (Math.PI) / 180
         }
+        //forward
+        actions[38] = function(){
+          _this.translateZ(10);
+        }
+        actions[40] = function(){
+          _this.translateZ(-10);
+        }
         if(typeof actions[key] != 'undefined'){
           actions[key]();
           console.log(_this.rotation.y)
